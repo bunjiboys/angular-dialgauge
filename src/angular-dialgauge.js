@@ -13,8 +13,8 @@ angular.module('angular-dialgauge', [
             restrict: 'E',                  // Use as element
             scope: {                        // Isolate scope
                 ngModel: '=',
-                scaleMin: '@',
-                scaleMax: '@',
+                scaleMin: '=',
+                scaleMax: '=',
                 rotate: '@',
                 angle: '@',
                 units: '@',
@@ -96,7 +96,6 @@ angular.module('angular-dialgauge', [
                 var cfg = {};
                 parseParameters({});
 
-
                 var rect = $element[0].getBoundingClientRect();
                 var center = Math.floor(Math.min(rect.width, rect.height) / 2);
                 height = width = center * 2;
@@ -143,8 +142,6 @@ angular.module('angular-dialgauge', [
                 $scope.$watch([
                     'rotate',
                     'angle',
-                    'scaleMin',
-                    'scaleMax',
                     'lineCap',
                     'barWidth',
                     'barColor',
@@ -173,6 +170,24 @@ angular.module('angular-dialgauge', [
                     // Update the static path for the gauge
                     staticPath = createStaticPath();
                     updateBar(currentValue);
+                });
+
+                $scope.$watch('scaleMin', function(value) {
+                    if (value !== undefined && !isNaN(Number(value))) {
+                        cfg.scaleMin = value;
+                        parseParameters($scope);
+                        staticPath = createStaticPath();
+                        updateBar(currentValue);
+                    }
+                });
+
+                $scope.$watch('scaleMax', function(value) {
+                    if (value !== undefined && !isNaN(Number(value))) {
+                        cfg.scaleMax = value;
+                        parseParameters($scope);
+                        staticPath = createStaticPath();
+                        updateBar(currentValue);
+                    }
                 });
 
                 // Set a watch on the model so we can update the dynamic part of the gauge
